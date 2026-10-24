@@ -7,24 +7,34 @@
 	let drawing = $state(false);
 
 	const rankTone: Record<string, string> = {
-		大吉: '#c9a227',
-		中吉: '#b3261e',
-		小吉: '#b3261e',
-		吉: '#3f6d4e',
-		末吉: '#3f6d4e',
-		凶: '#4a4a4a',
-		大凶: '#2b2b2b'
+		大吉: '#e0a800',
+		中吉: '#e4572e',
+		小吉: '#f08a24',
+		吉: '#2a9d8f',
+		末吉: '#3a86a8',
+		凶: '#6b5b95',
+		大凶: '#3d3d3d'
+	};
+
+	const rankEmoji: Record<string, string> = {
+		大吉: '🎉',
+		中吉: '✨',
+		小吉: '🍀',
+		吉: '🌸',
+		末吉: '🌱',
+		凶: '☁️',
+		大凶: '⛈️'
 	};
 </script>
 
 <svelte:head>
-	<title>おみくじ</title>
+	<title>まいにちおみくじ</title>
 	<meta name="description" content="SvelteKit 製のおみくじアプリ" />
 </svelte:head>
 
 <section class="card">
-	<h1>今日の運勢を占う</h1>
-	<p class="lead">おみくじを引くと、結果が自動で記録に残ります。</p>
+	<h1>今日の運勢をのぞいてみよう</h1>
+	<p class="lead">ボタンを押すと、おみくじの結果が記録に残ります。</p>
 
 	<form
 		method="POST"
@@ -38,18 +48,18 @@
 		}}
 	>
 		<button type="submit" disabled={drawing}>
-			{drawing ? '引いています…' : 'おみくじを引く'}
+			{drawing ? 'ドキドキ…' : 'おみくじを引く'}
 		</button>
 	</form>
 
 	{#if form?.result}
 		<div class="result" style="--tone: {rankTone[form.result.rank] ?? 'var(--accent)'}">
-			<p class="rank">{form.result.rank}</p>
+			<p class="rank">{rankEmoji[form.result.rank] ?? ''} {form.result.rank}</p>
 			<p class="message">{form.result.message}</p>
 			<dl>
-				<div><dt>ラッキーカラー</dt><dd>{form.result.lucky.color}</dd></div>
-				<div><dt>ラッキーアイテム</dt><dd>{form.result.lucky.item}</dd></div>
-				<div><dt>ラッキーナンバー</dt><dd>{form.result.lucky.number}</dd></div>
+				<div><dt>今日の色</dt><dd>{form.result.lucky.color}</dd></div>
+				<div><dt>今日のお守り</dt><dd>{form.result.lucky.item}</dd></div>
+				<div><dt>今日の数字</dt><dd>{form.result.lucky.number}</dd></div>
 			</dl>
 			{#if !form.persisted}
 				<p class="warn">
@@ -64,7 +74,7 @@
 	{/if}
 
 	<p class="note">
-		<a href="/history">おみくじ記録を見る →</a>
+		<a href="/history">これまでの記録を見る →</a>
 	</p>
 </section>
 
@@ -108,6 +118,18 @@
 		margin-top: 2rem;
 		padding-top: 1.5rem;
 		border-top: 1px dashed var(--line);
+		animation: pop 0.4s ease-out;
+	}
+
+	@keyframes pop {
+		from {
+			opacity: 0;
+			transform: translateY(8px) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
 	}
 
 	.rank {
